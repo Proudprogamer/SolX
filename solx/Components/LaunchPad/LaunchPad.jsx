@@ -8,11 +8,14 @@ import { createInitializeInstruction, pack } from '@solana/spl-token-metadata';
 function LaunchPad(){
 
     const [tokenName, settokenName] = useState("");
-    const [initialSupply, setinitialSupply] = useState();
     const [tokenSymbol, settokenSymbol] = useState("");
     const [decimals, setdecimals] = useState();
     const [description, setdescription] = useState("");
     const [imageURL, setimageURL] = useState("");
+    const [created, setcreated] = useState(false);
+    const [associatedToken, setassociatedToken] = useState();
+    const [mintKeypair, setmintKeypair] = useState();
+    const [initialSupply, setinitialSupply] = useState();
 
     const { connection } = useConnection();
     const wallet = useWallet();
@@ -35,9 +38,8 @@ function LaunchPad(){
 
         e.preventDefault();
 
-        console.log(tokenName, initialSupply, tokenSymbol, decimals, description, imageURL);
-
         const mintKeypair = Keypair.generate();
+        setmintKeypair(mintKeypair);
         const metadata = {
             mint: mintKeypair.publicKey,
             name: tokenName,
@@ -76,41 +78,61 @@ function LaunchPad(){
         transaction.feePayer = wallet.publicKey;
         transaction.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
         transaction.partialSign(mintKeypair);
-
-        await wallet.sendTransaction(transaction, connection);
-         const associatedToken = getAssociatedTokenAddressSync(
-            mintKeypair.publicKey,
-            wallet.publicKey,
-            false,
-            TOKEN_2022_PROGRAM_ID,
-        );
-
-        console.log(associatedToken.toBase58());
-
-        const transaction2 = new Transaction().add(
-            createAssociatedTokenAccountInstruction(
-                wallet.publicKey,
-                associatedToken,
-                wallet.publicKey,
+        
+        try{
+            await wallet.sendTransaction(transaction, connection);
+            const associatedToken = getAssociatedTokenAddressSync(
                 mintKeypair.publicKey,
+                wallet.publicKey,
+                false,
                 TOKEN_2022_PROGRAM_ID,
-            ),
-        );
+            );
 
-        await wallet.sendTransaction(transaction2, connection);
+            
+            console.log("Token created!");
+            setassociatedToken(associatedToken);
+            setcreated(true);
+            const transaction2 = new Transaction().add(
+                createAssociatedTokenAccountInstruction(
+                    wallet.publicKey,
+                    associatedToken,
+                    wallet.publicKey,
+                    mintKeypair.publicKey,
+                    TOKEN_2022_PROGRAM_ID,
+                ),
+            );
 
-        const transaction3 = new Transaction().add(
-            createMintToInstruction(mintKeypair.publicKey, associatedToken, wallet.publicKey, 1000000000, [], TOKEN_2022_PROGRAM_ID)
-        );
+            await wallet.sendTransaction(transaction2, connection);
 
-        await wallet.sendTransaction(transaction3, connection);
+            const transaction3 = new Transaction().add(
+                createMintToInstruction(mintKeypair.publicKey, associatedToken, wallet.publicKey, initialSupply * (10**decimals), [], TOKEN_2022_PROGRAM_ID)
+            );
+
+            try{
+                await wallet.sendTransaction(transaction3, connection);
+            }
+            catch(error)
+            {
+                console.log("user rejected the transaction");
+            }
+        }
+        catch(error)
+        {
+            console.log("user rejected the transaction!");
+        }
     }
-
     
     return(
         <div>
            <form className="w-100" onSubmit={(e)=>handleSubmit(e)}>
             <div>Token LaunchPad</div>
+            {
+                associatedToken && 
+                <div>
+                    Token created successfully!
+                    Token mint address : {associatedToken.toBase58()}
+                </div>
+            }
 
             <label htmlFor="token-name">Token Name :</label>
             <br></br>

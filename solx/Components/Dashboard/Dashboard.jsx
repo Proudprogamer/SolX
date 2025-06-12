@@ -1,3 +1,4 @@
+"use client"
 import LaunchPad from "../LaunchPad/LaunchPad";
 
 function DashBoard(){
