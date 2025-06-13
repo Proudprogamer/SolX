@@ -182,208 +182,242 @@ function LaunchPad() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black p-4">
-            <div className="max-w-4xl mx-auto">
-                {/* Header */}
-                <div className="text-center mb-8">
-                    <div className="flex items-center justify-center mb-4">
-                        <Rocket className="w-12 h-12 text-purple-400 mr-3" />
-                        <h1 className="text-4xl md:text-6xl font-bold bg-white bg-clip-text text-transparent">
-                            Token LaunchPad
-                        </h1>
-                    </div>
-                    <p className="text-gray-300 text-lg">Create your own Solana SPL Token with metadata</p>
-                </div>
+        <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black relative overflow-hidden">
+            {/* Background Elements */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute top-0 left-1/3 w-96 h-96 bg-white/3 rounded-full blur-3xl"></div>
+                <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-gray-500/3 rounded-full blur-3xl"></div>
+            </div>
 
-                {/* Success Message */}
-                {created && associatedToken && (
-                    <div className="mb-8 p-6 bg-gradient-to-r from-green-900/50 to-emerald-900/50 border border-green-500/30 rounded-2xl backdrop-blur-sm">
-                        <div className="flex items-center mb-4">
-                            <CheckCircle className="w-6 h-6 text-green-400 mr-2" />
-                            <h3 className="text-xl font-semibold text-green-400">Token Created Successfully!</h3>
-                        </div>
-                        <div className="space-y-3">
-                            <div>
-                                <p className="text-sm text-gray-300 mb-1">Token Mint Address:</p>
-                                <div className="flex items-center space-x-2 p-3 bg-black/30 rounded-lg">
-                                    <code className="text-sm text-green-400 font-mono flex-1 break-all">
-                                        {mintKeypair?.publicKey.toBase58()}
-                                    </code>
-                                    <button
-                                        onClick={() => copyToClipboard(mintKeypair?.publicKey.toBase58())}
-                                        className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
-                                        title="Copy mint address"
-                                    >
-                                        {copied ? <CheckCircle className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4 text-gray-400" />}
-                                    </button>
-                                </div>
+            {/* Grid Pattern */}
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none"></div>
+
+            <div className="relative z-10 p-4 sm:p-6 lg:p-8">
+                <div className="max-w-4xl mx-auto">
+                    {/* Header */}
+                    <div className="text-center mb-8 lg:mb-12">
+                        <div className="flex items-center justify-center mb-6">
+                            <div className="relative">
+                                <Rocket className="w-12 h-12 lg:w-16 lg:h-16 text-white mr-4" />
+                                <div className="absolute inset-0 bg-white/20 blur-xl rounded-full"></div>
                             </div>
                             <div>
-                                <p className="text-sm text-gray-300 mb-1">Associated Token Address:</p>
-                                <div className="flex items-center space-x-2 p-3 bg-black/30 rounded-lg">
-                                    <code className="text-sm text-blue-400 font-mono flex-1 break-all">
-                                        {associatedToken.toBase58()}
-                                    </code>
-                                    <button
-                                        onClick={() => copyToClipboard(associatedToken.toBase58())}
-                                        className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
-                                        title="Copy token address"
-                                    >
-                                        {copied ? <CheckCircle className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4 text-gray-400" />}
-                                    </button>
-                                </div>
+                                <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-white">
+                                    LaunchPad
+                                </h1>
+                                <div className="h-0.5 bg-gradient-to-r from-transparent via-white to-transparent mt-2"></div>
                             </div>
                         </div>
-                    </div>
-                )}
-
-                {/* Error Message */}
-                {errors.general && (
-                    <div className="mb-6 p-4 bg-red-900/50 border border-red-500/30 rounded-xl backdrop-blur-sm">
-                        <div className="flex items-center">
-                            <AlertCircle className="w-5 h-5 text-red-400 mr-2" />
-                            <p className="text-red-400">{errors.general}</p>
-                        </div>
-                    </div>
-                )}
-
-                {/* Form */}
-                <div className="bg-gray-800/30 backdrop-blur-xl border border-gray-700/50 rounded-3xl p-8 shadow-2xl">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {/* Token Name */}
-                        <div className="space-y-2">
-                            <label className="block text-sm font-medium text-gray-200">
-                                Token Name *
-                            </label>
-                            <input
-                                type="text"
-                                value={tokenName}
-                                onChange={(e) => setTokenName(e.target.value)}
-                                className={`w-full px-4 py-3 bg-gray-900/50 border ${errors.tokenName ? 'border-red-500' : 'border-gray-600'} rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-gray-400 transition-all`}
-                                placeholder="e.g., My Awesome Token"
-                                disabled={isLoading}
-                            />
-                            {errors.tokenName && <p className="text-red-400 text-sm">{errors.tokenName}</p>}
-                        </div>
-
-                        {/* Token Symbol */}
-                        <div className="space-y-2">
-                            <label className="block text-sm font-medium text-gray-200">
-                                Token Symbol *
-                            </label>
-                            <input
-                                type="text"
-                                value={tokenSymbol}
-                                onChange={(e) => setTokenSymbol(e.target.value.toUpperCase())}
-                                className={`w-full px-4 py-3 bg-gray-900/50 border ${errors.tokenSymbol ? 'border-red-500' : 'border-gray-600'} rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-gray-400 transition-all`}
-                                placeholder="e.g., MAT"
-                                maxLength={10}
-                                disabled={isLoading}
-                            />
-                            {errors.tokenSymbol && <p className="text-red-400 text-sm">{errors.tokenSymbol}</p>}
-                        </div>
-
-                        {/* Decimals */}
-                        <div className="space-y-2">
-                            <label className="block text-sm font-medium text-gray-200">
-                                Decimals (1-9) *
-                            </label>
-                            <select
-                                value={decimals}
-                                onChange={(e) => setDecimals(e.target.value)}
-                                className={`w-full px-4 py-3 bg-gray-900/50 border ${errors.decimals ? 'border-red-500' : 'border-gray-600'} rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white transition-all`}
-                                disabled={isLoading}
-                            >
-                                <option value="">Select decimals</option>
-                                {[1,2,3,4,5,6,7,8,9].map(num => (
-                                    <option key={num} value={num}>{num}</option>
-                                ))}
-                            </select>
-                            {errors.decimals && <p className="text-red-400 text-sm">{errors.decimals}</p>}
-                        </div>
-
-                        {/* Initial Supply */}
-                        <div className="space-y-2">
-                            <label className="block text-sm font-medium text-gray-200">
-                                Initial Supply *
-                            </label>
-                            <input
-                                type="number"
-                                value={initialSupply}
-                                onChange={(e) => setInitialSupply(e.target.value)}
-                                className={`w-full px-4 py-3 bg-gray-900/50 border ${errors.initialSupply ? 'border-red-500' : 'border-gray-600'} rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-gray-400 transition-all`}
-                                placeholder="e.g., 1000000"
-                                min="0"
-                                step="any"
-                                disabled={isLoading}
-                            />
-                            {errors.initialSupply && <p className="text-red-400 text-sm">{errors.initialSupply}</p>}
-                        </div>
-
-                        {/* Description */}
-                        <div className="md:col-span-2 space-y-2">
-                            <label className="block text-sm font-medium text-gray-200">
-                                Description *
-                            </label>
-                            <textarea
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                                className={`w-full px-4 py-3 bg-gray-900/50 border ${errors.description ? 'border-red-500' : 'border-gray-600'} rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-gray-400 transition-all h-24 resize-none`}
-                                placeholder="Describe your token's purpose and features..."
-                                disabled={isLoading}
-                            />
-                            {errors.description && <p className="text-red-400 text-sm">{errors.description}</p>}
-                        </div>
-
-                        {/* Image URL */}
-                        <div className="md:col-span-2 space-y-2">
-                            <label className="block text-sm font-medium text-gray-200">
-                                Image URL (Optional)
-                            </label>
-                            <input
-                                type="url"
-                                value={imageURL}
-                                onChange={(e) => setImageURL(e.target.value)}
-                                className={`w-full px-4 py-3 bg-gray-900/50 border ${errors.imageURL ? 'border-red-500' : 'border-gray-600'} rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-gray-400 transition-all`}
-                                placeholder="https://example.com/token-image.png"
-                                disabled={isLoading}
-                            />
-                            {errors.imageURL && <p className="text-red-400 text-sm">{errors.imageURL}</p>}
-                        </div>
+                        <p className="text-gray-300 text-base lg:text-lg max-w-2xl mx-auto">
+                            Create your own Solana SPL Token with metadata on the  solana blockchain
+                        </p>
                     </div>
 
-                    {/* Submit Button */}
-                    <div className="mt-8">
-                        <button
-                            onClick={handleSubmit}
-                            disabled={isLoading || !wallet.connected}
-                            className="w-full py-4 px-6 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-[1.02] disabled:scale-100 shadow-lg"
-                        >
-                            {isLoading ? (
-                                <div className="flex items-center justify-center">
-                                    <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                                    Creating Token...
+                    {/* Success Message */}
+                    {created && associatedToken && (
+                        <div className="mb-8 p-4 lg:p-6 bg-white/5 backdrop-blur-xl border border-white/20 rounded-2xl">
+                            <div className="flex items-center mb-4">
+                                <CheckCircle className="w-6 h-6 text-green-400 mr-3 flex-shrink-0" />
+                                <h3 className="text-lg lg:text-xl font-semibold text-green-400">Token Created Successfully!</h3>
+                            </div>
+                            <div className="space-y-4">
+                                <div>
+                                    <p className="text-sm text-gray-300 mb-2">Token Mint Address:</p>
+                                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 p-3 bg-black/40 rounded-lg border border-white/10">
+                                        <code className="text-sm text-green-400 font-mono break-all flex-1">
+                                            {mintKeypair?.publicKey.toBase58()}
+                                        </code>
+                                        <button
+                                            onClick={() => copyToClipboard(mintKeypair?.publicKey.toBase58())}
+                                            className="p-2 hover:bg-white/10 rounded-lg transition-all duration-200 self-center"
+                                            title="Copy mint address"
+                                        >
+                                            {copied ? <CheckCircle className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4 text-gray-400" />}
+                                        </button>
+                                    </div>
                                 </div>
-                            ) : !wallet.connected ? (
-                                "Connect Wallet First"
-                            ) : (
-                                <div className="flex items-center justify-center">
-                                    <Rocket className="w-5 h-5 mr-2" />
-                                    Launch Token
+                                <div>
+                                    <p className="text-sm text-gray-300 mb-2">Associated Token Address:</p>
+                                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 p-3 bg-black/40 rounded-lg border border-white/10">
+                                        <code className="text-sm text-blue-400 font-mono break-all flex-1">
+                                            {associatedToken.toBase58()}
+                                        </code>
+                                        <button
+                                            onClick={() => copyToClipboard(associatedToken.toBase58())}
+                                            className="p-2 hover:bg-white/10 rounded-lg transition-all duration-200 self-center"
+                                            title="Copy token address"
+                                        >
+                                            {copied ? <CheckCircle className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4 text-gray-400" />}
+                                        </button>
+                                    </div>
                                 </div>
-                            )}
-                        </button>
-                    </div>
-
-                    {/* Wallet Connection Status */}
-                    {!wallet.connected && (
-                        <div className="mt-4 p-4 bg-yellow-900/50 border border-yellow-500/30 rounded-xl backdrop-blur-sm">
-                            <div className="flex items-center">
-                                <AlertCircle className="w-5 h-5 text-yellow-400 mr-2" />
-                                <p className="text-yellow-400">Please connect your Solana wallet to create tokens</p>
                             </div>
                         </div>
                     )}
+
+                    {/* Error Message */}
+                    {errors.general && (
+                        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-xl backdrop-blur-sm">
+                            <div className="flex items-start">
+                                <AlertCircle className="w-5 h-5 text-red-400 mr-3 flex-shrink-0 mt-0.5" />
+                                <p className="text-red-400 text-sm lg:text-base">{errors.general}</p>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Form */}
+                    <div className="bg-white/5 backdrop-blur-xl border border-white/20 rounded-2xl lg:rounded-3xl p-6 lg:p-8 shadow-2xl">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            {/* Token Name */}
+                            <div className="space-y-2">
+                                <label className="block text-sm font-medium text-white">
+                                    Token Name *
+                                </label>
+                                <input
+                                    type="text"
+                                    value={tokenName}
+                                    onChange={(e) => setTokenName(e.target.value)}
+                                    className={`w-full px-4 py-3 bg-black/20 backdrop-blur-sm border ${
+                                        errors.tokenName ? 'border-red-500/50' : 'border-white/20 focus:border-white/40'
+                                    } rounded-xl focus:ring-2 focus:ring-white/20 focus:outline-none text-white placeholder-gray-400 transition-all duration-200`}
+                                    placeholder="e.g., My Awesome Token"
+                                    disabled={isLoading}
+                                />
+                                {errors.tokenName && <p className="text-red-400 text-sm">{errors.tokenName}</p>}
+                            </div>
+
+                            {/* Token Symbol */}
+                            <div className="space-y-2">
+                                <label className="block text-sm font-medium text-white">
+                                    Token Symbol *
+                                </label>
+                                <input
+                                    type="text"
+                                    value={tokenSymbol}
+                                    onChange={(e) => setTokenSymbol(e.target.value.toUpperCase())}
+                                    className={`w-full px-4 py-3 bg-black/20 backdrop-blur-sm border ${
+                                        errors.tokenSymbol ? 'border-red-500/50' : 'border-white/20 focus:border-white/40'
+                                    } rounded-xl focus:ring-2 focus:ring-white/20 focus:outline-none text-white placeholder-gray-400 transition-all duration-200`}
+                                    placeholder="e.g., MAT"
+                                    maxLength={10}
+                                    disabled={isLoading}
+                                />
+                                {errors.tokenSymbol && <p className="text-red-400 text-sm">{errors.tokenSymbol}</p>}
+                            </div>
+
+                            {/* Decimals */}
+                            <div className="space-y-2">
+                                <label className="block text-sm font-medium text-white">
+                                    Decimals (1-9) *
+                                </label>
+                                <select
+                                    value={decimals}
+                                    onChange={(e) => setDecimals(e.target.value)}
+                                    className={`w-full px-4 py-3 bg-black/20 backdrop-blur-sm border ${
+                                        errors.decimals ? 'border-red-500/50' : 'border-white/20 focus:border-white/40'
+                                    } rounded-xl focus:ring-2 focus:ring-white/20 focus:outline-none text-white transition-all duration-200`}
+                                    disabled={isLoading}
+                                >
+                                    <option value="" className="bg-gray-900">Select decimals</option>
+                                    {[1,2,3,4,5,6,7,8,9].map(num => (
+                                        <option key={num} value={num} className="bg-gray-900">{num}</option>
+                                    ))}
+                                </select>
+                                {errors.decimals && <p className="text-red-400 text-sm">{errors.decimals}</p>}
+                            </div>
+
+                            {/* Initial Supply */}
+                            <div className="space-y-2">
+                                <label className="block text-sm font-medium text-white">
+                                    Initial Supply *
+                                </label>
+                                <input
+                                    type="number"
+                                    value={initialSupply}
+                                    onChange={(e) => setInitialSupply(e.target.value)}
+                                    className={`w-full px-4 py-3 bg-black/20 backdrop-blur-sm border ${
+                                        errors.initialSupply ? 'border-red-500/50' : 'border-white/20 focus:border-white/40'
+                                    } rounded-xl focus:ring-2 focus:ring-white/20 focus:outline-none text-white placeholder-gray-400 transition-all duration-200`}
+                                    placeholder="e.g., 1000000"
+                                    min="0"
+                                    step="any"
+                                    disabled={isLoading}
+                                />
+                                {errors.initialSupply && <p className="text-red-400 text-sm">{errors.initialSupply}</p>}
+                            </div>
+
+                            {/* Description */}
+                            <div className="lg:col-span-2 space-y-2">
+                                <label className="block text-sm font-medium text-white">
+                                    Description *
+                                </label>
+                                <textarea
+                                    value={description}
+                                    onChange={(e) => setDescription(e.target.value)}
+                                    className={`w-full px-4 py-3 bg-black/20 backdrop-blur-sm border ${
+                                        errors.description ? 'border-red-500/50' : 'border-white/20 focus:border-white/40'
+                                    } rounded-xl focus:ring-2 focus:ring-white/20 focus:outline-none text-white placeholder-gray-400 transition-all duration-200 h-24 resize-none`}
+                                    placeholder="Describe your token's purpose and features..."
+                                    disabled={isLoading}
+                                />
+                                {errors.description && <p className="text-red-400 text-sm">{errors.description}</p>}
+                            </div>
+
+                            {/* Image URL */}
+                            <div className="lg:col-span-2 space-y-2">
+                                <label className="block text-sm font-medium text-white">
+                                    Image URL (Optional)
+                                </label>
+                                <input
+                                    type="url"
+                                    value={imageURL}
+                                    onChange={(e) => setImageURL(e.target.value)}
+                                    className={`w-full px-4 py-3 bg-black/20 backdrop-blur-sm border ${
+                                        errors.imageURL ? 'border-red-500/50' : 'border-white/20 focus:border-white/40'
+                                    } rounded-xl focus:ring-2 focus:ring-white/20 focus:outline-none text-white placeholder-gray-400 transition-all duration-200`}
+                                    placeholder="https://example.com/token-image.png"
+                                    disabled={isLoading}
+                                />
+                                {errors.imageURL && <p className="text-red-400 text-sm">{errors.imageURL}</p>}
+                            </div>
+                        </div>
+
+                        {/* Submit Button */}
+                        <div className="mt-8">
+                            <button
+                                onClick={handleSubmit}
+                                disabled={isLoading || !wallet.connected}
+                                className="w-full py-4 px-6 bg-white/10 hover:bg-white/20 disabled:bg-gray-600/30 backdrop-blur-sm border border-white/20 hover:border-white/40 disabled:border-gray-600/30 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-[1.01] disabled:scale-100 shadow-lg disabled:cursor-not-allowed"
+                            >
+                                {isLoading ? (
+                                    <div className="flex items-center justify-center">
+                                        <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                                        <span className="hidden sm:inline">Creating Token...</span>
+                                        <span className="sm:hidden">Creating...</span>
+                                    </div>
+                                ) : !wallet.connected ? (
+                                    "Connect Wallet First"
+                                ) : (
+                                    <div className="flex items-center justify-center">
+                                        <Rocket className="w-5 h-5 mr-2" />
+                                        Launch Token
+                                    </div>
+                                )}
+                            </button>
+                        </div>
+
+                        {/* Wallet Connection Status */}
+                        {!wallet.connected && (
+                            <div className="mt-6 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-xl backdrop-blur-sm">
+                                <div className="flex items-start">
+                                    <AlertCircle className="w-5 h-5 text-yellow-400 mr-3 flex-shrink-0 mt-0.5" />
+                                    <p className="text-yellow-400 text-sm lg:text-base">
+                                        Please connect your Solana wallet to create tokens
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
