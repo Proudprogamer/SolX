@@ -87,7 +87,7 @@ function DashBoard() {
     };
 
     return (
-        <ConnectionProvider endpoint={"https://api.devnet.solana.com"}>
+        <ConnectionProvider endpoint={"https://api.mainnet-beta.solana.com"}>
             <WalletProvider wallets={[]} autoConnect>
                 <WalletModalProvider>
                     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black relative overflow-hidden">
