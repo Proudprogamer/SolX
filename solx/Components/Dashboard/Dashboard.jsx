@@ -185,31 +185,6 @@ function DashBoard() {
                                     </div>
                                 </div>
 
-                                {/* Tablet Navigation */}
-                                <div className="hidden md:flex lg:hidden pb-4 pt-2">
-                                    <div className="flex space-x-2 w-full">
-                                        {navItems.map((item) => {
-                                            const Icon = item.icon;
-                                            const isActive = activeTab === item.id;
-                                            return (
-                                                <button
-                                                    key={item.id}
-                                                    onClick={() => setActiveTab(item.id)}
-                                                    className={`flex-1 flex items-center justify-center space-x-2 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 ${
-                                                        isActive
-                                                            ? 'bg-white/15 text-white border border-white/20 backdrop-blur-md'
-                                                            : 'text-gray-400 hover:text-white hover:bg-white/5 backdrop-blur-sm border border-transparent hover:border-white/10'
-                                                    }`}
-                                                >
-                                                    <Icon className={`w-4 h-4 ${
-                                                        isActive ? 'text-white' : 'text-gray-500'
-                                                    }`} />
-                                                    <span>{item.label}</span>
-                                                </button>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
                             </div>
                         </nav>
 

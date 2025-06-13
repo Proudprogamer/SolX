@@ -124,7 +124,7 @@ function Swap() {
       </button>
       
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-gray-800 border border-gray-700 rounded-lg shadow-2xl z-50 max-h-60 overflow-y-auto">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl z-[9999] max-h-64 overflow-y-auto">
           {POPULAR_TOKENS.map((t) => (
             <button
               key={t.mint}
@@ -149,11 +149,11 @@ function Swap() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 mt-[-50px] to-black flex items-center justify-center">
-      <div className="w-full max-w-md mx-auto">
-        <div className="bg-white/5 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-700 overflow-hidden">
+    <div className={`min-h-screen ${showSettings && "pt-[105px] pb-30"} pb-10 bg-gradient-to-br from-black via-gray-900 mt-[-50px] to-black flex items-center justify-center`}>
+      <div className="w-80 sm:w-full sm:max-w-md sm:mx-auto ">
+        <div className="bg-white/5 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-700">
           {/* Header */}
-          <div className="bg-gradient-to-r from-black to-gray-800 p-4 sm:p-6 text-white">
+          <div className="bg-gradient-to-r from-black to-gray-800 p-4 sm:p-6 text-white rounded-2xl">
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-xl sm:text-2xl font-bold">🚀 Token Swapper</h1>

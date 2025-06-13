@@ -199,7 +199,6 @@ function LaunchPad() {
                         <div className="flex items-center justify-center mb-6">
                             <div className="relative">
                                 <Rocket className="w-12 h-12 lg:w-16 lg:h-16 text-white mr-4" />
-                                <div className="absolute inset-0 bg-white/20 blur-xl rounded-full"></div>
                             </div>
                             <div>
                                 <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-white">
